@@ -3,10 +3,12 @@ const express = require('express');
 // const morgan = require('morgan');
 // const nunjucks = require('nunjucks');
 const { User } = require('./schemas/user');
+const { auth } = require('./middleware/auth');
 
 const connect = require('./schemas');
 const indexRouter = require('./routes');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -22,6 +24,7 @@ connect();
 // app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // app.use((req, res, next) => {
 //   const error = new Error(`${req.method} ${req.url} 라우터가 없어졌습니다.`);
@@ -59,15 +62,9 @@ app.post('/login', (req, res) => {
         message: '존재하지 않는 아이디입니다.',
       });
     }
-    // console.log(req.body.password);
-    console.log(user);
-    console.log('-----1');
-    console.log(req.body.password);
-    console.log('-----2');
     user
       .comparePassword(req.body.password)
       .then((isMatch) => {
-        console.log('iam hodoo1');
         if (!isMatch) {
           res.json({
             loginSuccess: false,
@@ -77,21 +74,29 @@ app.post('/login', (req, res) => {
         user
           .generateToken()
           .then((user) => {
-            console.log('iam hodoo2');
             res
               .cookie('x_auth', user.token)
               .status(200)
               .json({ loginSuccess: true, userId: user._id });
           })
           .catch((err) => {
-            console.log('iam hodoo3');
             res.status(400).send(err);
           });
       })
       .catch((err) => {
-        console.log(err, 'iam hodoo4');
-        res.json({ loginSuccess: false, err })
+        res.json({ loginSuccess: false, err });
       });
+  });
+});
+
+app.get('/auth', auth, (req, res) => {
+  res.status(200).json({
+    _id: req._id,
+    isAdmin: req.user.role === 09 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    role: req.user.role,
   });
 });
 
