@@ -4,11 +4,9 @@ const express = require('express');
 // const nunjucks = require('nunjucks');
 const { User } = require('./schemas/user');
 const { auth } = require('./middleware/auth');
-
 const connect = require('./schemas');
-const indexRouter = require('./routes');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+cont cors = require('cors');
 
 const app = express();
 
@@ -22,6 +20,10 @@ connect();
 
 // app.use(morgan('dev'));
 // app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({
+  origin: true,
+  credential: true, // 도메인이 다른 경우 서로 쿠키등을 주고받을때 허용해준다고 한다.
+}))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
@@ -97,6 +99,18 @@ app.get('/auth', auth, (req, res) => {
     email: req.user.email,
     name: req.user.name,
     role: req.user.role,
+  });
+});
+
+app.get('/logout', auth, (req, res) => {
+  User.findOneAndUpdate({ _id: req.user._id }, { token : ''}, (err, user) => {
+    if (err) {
+      return res.json({ success: false, err });
+    }
+    res.clearCookie('x_auth');
+    return res.status(200).send({
+      success: true,
+    });
   });
 });
 
