@@ -8,15 +8,18 @@ const jwt = require('jsonwebtoken');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  // id: {
-  //   type: String,
-  //   required: true,
-  //   unique: true,
-  // },
+  id: {
+    type: String,
+    unique: true,
+  },
+  oAuthId: {
+    type: Number,
+    uniqye: true,
+  },
   email: {
     type: String,
+    unique: true,
     trim: true,
-    unique: 1,
   },
   password: {
     type: String,
@@ -26,7 +29,7 @@ const userSchema = new Schema({
     type: String,
     maxlength: 50,
   },
-  provider: {
+  roles: {
     type: String,
   },
   token: {
@@ -37,6 +40,15 @@ const userSchema = new Schema({
   },
   last_login_date: {
     type: Date,
+  },
+  access_token: {
+    type: String,
+  },
+  refresh_token: {
+    type: String,
+  },
+  token_type: {
+    type: String,
   },
 });
 
@@ -80,7 +92,7 @@ userSchema.statics.findByToken = function (token) {
   let user = this;
   // secretToken을 통해 user의 id값을 받아오고 해당 아이디를 통해
   // DB에 접근해서 유저의 정보를 가져온다.
-  return jwt.verify(token, 'secretToken', function(err, decoded) {
+  return jwt.verify(token, 'secretToken', function (err, decoded) {
     // jwt.verify(토큰, '지정해둔 특정문자')를 넣어서 decoded된 값을 통해 _id와 db를 조회해서 값을 너겨준다.
     return user
       .findOne({ _id: decoded, token: token })
@@ -88,7 +100,6 @@ userSchema.statics.findByToken = function (token) {
       .catch((err) => err);
   });
 };
-
 
 const User = mongoose.model('User', userSchema);
 
