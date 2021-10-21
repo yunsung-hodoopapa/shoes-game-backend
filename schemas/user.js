@@ -10,15 +10,13 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   id: {
     type: String,
-    unique: true,
   },
   oAuthId: {
     type: Number,
-    uniqye: true,
+    unique: true,
   },
   email: {
     type: String,
-    unique: true,
     trim: true,
   },
   password: {
@@ -71,7 +69,7 @@ userSchema.pre('save', function (next) {
   }
 });
 
-userSchema.methods.comparePassword = function (plainPassword) {
+userSchema.methods.comparePassword = function (plainPassword, cb) {
   return bcrypt
     .compare(plainPassword, this.password)
     .then((isMatch) => isMatch)
@@ -79,6 +77,7 @@ userSchema.methods.comparePassword = function (plainPassword) {
 };
 
 userSchema.methods.generateToken = function () {
+  const user = this;
   //jwt.sign을 이용해서 jwt 토큰을 생성해준다.
   const token = jwt.sign(this._id.toHexString(), 'secretToken');
   this.token = token;

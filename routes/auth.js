@@ -11,20 +11,20 @@ router.post('/register', (req, res) => {
   const user = new User(req.body);
   user.save((err, userInfo) => {
     if (err) return res.json({ success: false, err });
+    console.log('processing...', userInfo);
     return res.status(200).json({ success: true });
   });
 });
 
 router.post('/login', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
-    if (err) {
+    if (!user) {
       return res.json({
         loginSuccess: false,
         message: '존재하지 않는 아이디입니다.',
       });
     }
-    user
-      .comparePassword(req.body.password)
+    user.comparePassword(req.body.password)
       .then((isMatch) => {
         if (!isMatch) {
           res.json({
@@ -75,32 +75,36 @@ router.get('/logout', auth, (req, res) => {
 });
 
 router.post('/kakao', (req, res) => {
-  console.log('here');
+  console.log(req.body.access_token);
   if (req.body.access_token) {
     // 요청 body에 토큰 키가 존재하는지 체크한다.
     // 만일 존재한다면, DB에 해당하는 토큰키를 갖고 있는 유저를 탐색한다.
-    User.findOne({ access_token: req.body.acce_token }, (err, user) => {
+    User.findOne({ access_token: req.body.access_token }, (err, user) => {
       if (!user) {
-        const userSchema = new User(req.body);
+        const userSchema = new User(req.body); 
+        console.log('저장중..');
+        console.log(req.body);
         // 계정을 추가한다.
         userSchema.save((err) => {
           if (err) {
             return res.json({ success: false, err });
           }
+          console.log('saving...');
           return res.status(200).json({
             registerSuccess: true,
           });
         });
       }
-      user.generateToken((err, user) => {
-        if (err) {
-          return res.status(400).send(err);
-        }
-        res
-          .cookie('x_auth', user.token)
-          .status(200)
-          .json({ loginSuccess: true, userId: user._id, token: user.token });
-      });
+      // console.log(user);
+      // user.generateToken((err, user) => {
+      //   if (err) {
+      //     return res.status(400).send(err);
+      //   }
+      //   res
+      //     .cookie('x_auth', user.token)
+      //     .status(200)
+      //     .json({ loginSuccess: true, userId: user._id, token: user.token });
+      // });
     });
   }
 });
