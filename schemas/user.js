@@ -27,8 +27,21 @@ const userSchema = new Schema({
     type: String,
     maxlength: 50,
   },
+  nickname: {
+    type: String,
+  },
   roles: {
     type: String,
+  },
+  social: {
+    kakao: {
+      id: {
+        type: String,
+      },
+      access_token: {
+        type: String,
+      },
+    }
   },
   token: {
     type: String,
@@ -38,12 +51,6 @@ const userSchema = new Schema({
   },
   last_login_date: {
     type: Date,
-  },
-  access_token: {
-    type: String,
-  },
-  refresh_token: {
-    type: String,
   },
   token_type: {
     type: String,

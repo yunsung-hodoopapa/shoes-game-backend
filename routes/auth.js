@@ -11,7 +11,6 @@ router.post('/register', (req, res) => {
   const user = new User(req.body);
   user.save((err, userInfo) => {
     if (err) return res.json({ success: false, err });
-    console.log('processing...', userInfo);
     return res.status(200).json({ success: true });
   });
 });
@@ -32,9 +31,11 @@ router.post('/login', (req, res) => {
             message: '비밀번호가 일치하지 않습니다',
           });
         }
+        console.log('here', user);
         user
           .generateToken()
           .then((user) => {
+            console.log(user.token);
             res
               .cookie('x_auth', user.token)
               .status(200)
@@ -77,11 +78,12 @@ router.get('/logout', auth, (req, res) => {
 router.post('/kakao', (req, res) => {
   console.log(req.body.access_token);
   if (req.body.access_token) {
+    res.cookie('x_auth', req.body.access_token);
     // 요청 body에 토큰 키가 존재하는지 체크한다.
     // 만일 존재한다면, DB에 해당하는 토큰키를 갖고 있는 유저를 탐색한다.
     User.findOne({ access_token: req.body.access_token }, (err, user) => {
       if (!user) {
-        const userSchema = new User(req.body); 
+        const userSchema = new User(req.body);
         console.log('저장중..');
         console.log(req.body);
         // 계정을 추가한다.
