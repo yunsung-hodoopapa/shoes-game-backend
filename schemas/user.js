@@ -55,6 +55,9 @@ const userSchema = new Schema({
   token_type: {
     type: String,
   },
+  image: {
+    type: String,
+  },
 });
 
 //save 메소드가 실행되기 전에 비밀번호를 암호화하는 로직을 짜야한다.
