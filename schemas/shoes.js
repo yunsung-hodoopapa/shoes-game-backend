@@ -19,6 +19,9 @@ const shoesSchema = new Schema({
     type: Number,
     required: true,
   },
+  thumbnail: {
+    type: String,
+  },
   buying_cost: {
     type: Number,
     required: true,

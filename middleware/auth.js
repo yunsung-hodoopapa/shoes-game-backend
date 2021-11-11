@@ -1,14 +1,15 @@
 const { User } = require('../schemas/user');
 
-let auth = (req, res, next) => {
+let auth = async (req, res, next) => {
   let token = req.cookies.x_auth;
 
   User.findByToken(token, (err, user) => {
     if (err) {
+      console.log('error');
       throw err;
     }
     if (!user) {
-      return res.josn({ isAuth: false, error: true });
+      return res.json({ isAuth: false, error: true });
     }
     req.token = token;
     req.user = user;

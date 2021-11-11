@@ -98,15 +98,17 @@ userSchema.methods.generateToken = function () {
 
 userSchema.statics.findByToken = function (token) {
   // 항시 사용가능한 메소드 statics
+  console.log('alive');
   let user = this;
   // secretToken을 통해 user의 id값을 받아오고 해당 아이디를 통해
   // DB에 접근해서 유저의 정보를 가져온다.
   return jwt.verify(token, 'secretToken', function (err, decoded) {
+
     // jwt.verify(토큰, '지정해둔 특정문자')를 넣어서 decoded된 값을 통해 _id와 db를 조회해서 값을 너겨준다.
     return user
       .findOne({ _id: decoded, token: token })
       .then((user) => user)
-      .catch((err) => err);
+      .catch((err) => console.log(err));
   });
 };
 

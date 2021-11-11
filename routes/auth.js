@@ -65,17 +65,15 @@ router.get('/users', auth, (req, res) => {
   });
 });
 
-router.get('/logout', auth, (req, res) => {
-  User.findOneAndUpdate({ _id: req.user._id }, { token: '' }, (err, user) => {
-    if (err) {
-      return res.json({ success: false, err });
-    }
-    res.clearCookie('x_auth');
-    res.redirect('/login');
-    return res.status(200).send({
-      success: true,
-    });
-  });
+router.post('/logout', (req, res) => {
+  // User.findOneAndUpdate({ _id: req.user._id }, { token: '' }, (err, user) => {
+  //   if (err) {
+  //     return res.json({ success: false, err });
+  //   }
+  //   return res.status(200).send({
+  //     success: true,
+  //   });
+  // });
 });
 
 const kakao = {
@@ -84,44 +82,51 @@ const kakao = {
   redirectUri: process.env.KAKAO_REDIRECT_URI,
 };
 
-router.post('/kakao', (req, res) => {
+router.post('/kakao', async (req, res) => {
   if (req.body.access_token) {
-    res.cookie('kakao_auth', req.body.access_token);
     User.findOne({ access_token: req.body.access_token }, (err, user) => {
       if (!user) {
         console.log(req.body);
         const user = new User(req.body);
-        // const newUser = User.create({
-        //   email:  req.body.email,
-        //   nickname: req.body.nickname,
-        //   profile_img: req.body.profile_image_url,
-        // });
         user.save((err, doc) => {
           //json 형식으로 보내준다.
           if (err) {
             return res.json({ success: false, err });
           }
-          return res.status(200).json({
-            registerSuccess: true,
-          });
+          return res.status(200).json({ success: true, err });
         });
-      }
-      user.generateToken((err, user) => {
-        if (err) return res.status(400).send(err);
-        // save Token at Cookie
-        res
-          .cookie('x_auth', user.token) //쿠키에 JWT토큰을 넣어준다.
-          .status(200)
-          .json({
-            socialLoginSuccess: true,
-            userId: user._Id,
-            token: user.token,
+        user
+          .generateToken()
+          .then((user) => {
+            res
+              .cookie('x_auth', user.token) //쿠키에 JWT토큰을 넣어준다.
+              .status(200)
+              .json({
+                registerSuccess: true,
+                socialLoginSuccess: true,
+                userId: user._id,
+                token: user.token,
+              });
+          })
+          .catch((err) => {
+            res.json({ socialLoginSuccess: false, err });
           });
+      }
+      user.token = req.body.access_token;
+      user.save((error, user) => {
+        if (error) {
+          return res.status(400).json({ error: 'something wrong' });
+        }
+        return res.cookie('x_auth', user.token).status(200).json({
+          socialLoginSuccess: true,
+          userId: user._id,
+          token: user.token,
+        });
       });
+      // res.status(200).json({ socialLoginSuccess: true, user})
     });
   }
 });
-
 // // const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?
 // // client_id=${kakao.clientID}&redirect_uri=${kakao.redirectUri}&
 // // response_type=code&scope=profile,account_email`;
