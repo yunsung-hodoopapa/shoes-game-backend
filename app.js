@@ -5,15 +5,10 @@ const connect = require('./schemas');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-
-const DEFAULT_LIMIT = require('./constants/index');
-
 dotenv.config();
 
-const SneaksAPI = require('sneaks-api');
-const sneaks = new SneaksAPI();
-
 const authRouter = require('./routes/auth');
+const shoesRouter = require('./routes/shoes');
 
 const app = express();
 
@@ -36,7 +31,7 @@ app.use(cookieParser());
 // app.get('/', (req, res) => res.send('hello world!!'));
 
 app.use('/auth', authRouter);
-
+app.use('/shoes', shoesRouter);
 
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
