@@ -34,6 +34,16 @@ router.post('/regist', async (req, res, next) => {
   // });
 });
 
+router.get('/loadData', async (req, res, next) => {
+  try {
+    const savedShoesData = await Shoes.find({});
+    res.status(200).json(savedShoesData);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 router.get('/search', (req, res, next) => {
   try {
     const keyword = req.query.keyword;
@@ -53,7 +63,6 @@ router.get('/search', (req, res, next) => {
   } catch (err) {
     // 일단 작동을 하지 않고 있음.
     console.log('here');
-    console.log(err.message);
     return res.status(400).json({
       message: err.message,
     });
