@@ -13,9 +13,14 @@ router.post('/regist', async (req, res, next) => {
     const shoes = await Shoes.create({
       shoeName: req.body.shoeName,
       shoeSize: req.body.shoeSize,
+      shoePrice: req.body.shoePrice,
+      buyingDate: req.body.buyingDate,
+      thumbnail: req.body.thumbnail,
+      brand: req.body.brand
     });
     console.log(shoes);
-    res.status(200).json(shoes);
+    const inStoreShoes = await Shoes.find({});
+    res.status(200).json(inStoreShoes);
   } catch (err) {
     console.error(err);
     next(err);
@@ -33,11 +38,13 @@ router.get('/search', (req, res, next) => {
   try {
     const keyword = req.query.keyword;
     sneaks.getProducts(keyword, (limit = DEFAULT_LIMIT), (err, products) => {
+      console.log(products);
       // try {
       if (err) {
         console.log(err);
         // throw err;
       }
+      console.log(products)
       return res.json(products);
       // } catch (err) {
       // throw err;
