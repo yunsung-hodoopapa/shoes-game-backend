@@ -1,8 +1,9 @@
 const express = require('express');
 const { Shoes } = require('../schemas/shoes');
-
 const SneaksAPI = require('sneaks-api');
 const sneaks = new SneaksAPI();
+const mongoose = require('mongoose');
+const { ObjectId } = require('mongodb');
 
 const router = express.Router();
 
@@ -18,7 +19,6 @@ router.post('/regist', async (req, res, next) => {
       thumbnail: req.body.thumbnail,
       brand: req.body.brand
     });
-    console.log(shoes);
     const inStoreShoes = await Shoes.find({});
     res.status(200).json(inStoreShoes);
   } catch (err) {
@@ -34,7 +34,29 @@ router.post('/regist', async (req, res, next) => {
   // });
 });
 
-router.get('/loadData', async (req, res, next) => {
+router.patch('/shoesInfo', async (req, res, next) => {
+  const id = req.body.id.toString();
+  console.log(id);
+  try {
+    const updateShoeInfo = await Shoes.findOneAndUpdate({
+      _id : ObjectId(req.body._id),
+    },{ $set:{
+      shoeName: req.body.shoeName,
+      shoeSize: req.body.shoeSize,
+      shoePrice: req.body.shoePrice,
+      buyingDate: req.body.buyingDate,
+      thumbnail: req.body.thumbnail,
+      brand: req.body.brand,
+    }});
+    const inStoreShoes = await Shoes.find({});
+    res.status(200).json(inStoreShoes);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/managed-shoesInfo', async (req, res, next) => {
   try {
     const savedShoesData = await Shoes.find({});
     res.status(200).json(savedShoesData);
@@ -48,13 +70,11 @@ router.get('/search', (req, res, next) => {
   try {
     const keyword = req.query.keyword;
     sneaks.getProducts(keyword, (limit = DEFAULT_LIMIT), (err, products) => {
-      console.log(products);
       // try {
       if (err) {
         console.log(err);
         // throw err;
       }
-      console.log(products)
       return res.json(products);
       // } catch (err) {
       // throw err;
