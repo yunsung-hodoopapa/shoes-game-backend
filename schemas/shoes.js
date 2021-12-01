@@ -18,8 +18,8 @@ const shoesSchema = new Schema({
     type: String,
     required: true,
   },
-  color: {
-    type: Number,
+  shoePrice: {
+    type: String,
     // required: true,
   },
   thumbnail: {
@@ -29,7 +29,7 @@ const shoesSchema = new Schema({
     type: Number,
     // required: true,
   },
-  buying_data: {
+  buyingDate: {
     type: Date,
     // required: true,
   },

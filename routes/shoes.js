@@ -17,7 +17,7 @@ router.post('/regist', async (req, res, next) => {
       shoePrice: req.body.shoePrice,
       buyingDate: req.body.buyingDate,
       thumbnail: req.body.thumbnail,
-      brand: req.body.brand
+      brand: req.body.brand,
     });
     const inStoreShoes = await Shoes.find({});
     res.status(200).json(inStoreShoes);
@@ -35,19 +35,35 @@ router.post('/regist', async (req, res, next) => {
 });
 
 router.patch('/shoesInfo', async (req, res, next) => {
-  const id = req.body.id.toString();
-  console.log(id);
   try {
-    const updateShoeInfo = await Shoes.findOneAndUpdate({
-      _id : ObjectId(req.body._id),
-    },{ $set:{
-      shoeName: req.body.shoeName,
-      shoeSize: req.body.shoeSize,
-      shoePrice: req.body.shoePrice,
-      buyingDate: req.body.buyingDate,
-      thumbnail: req.body.thumbnail,
-      brand: req.body.brand,
-    }});
+    const updateShoeInfo = await Shoes.findOneAndUpdate(
+      {
+        _id: ObjectId(req.body._id),
+      },
+      {
+        $set: {
+          shoeName: req.body.shoeName,
+          shoeSize: req.body.shoeSize,
+          shoePrice: req.body.shoePrice,
+          buyingDate: req.body.buyingDate,
+          thumbnail: req.body.thumbnail,
+          brand: req.body.brand,
+        },
+      }
+    );
+    const inStoreShoes = await Shoes.find({});
+    res.status(200).json(inStoreShoes);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.delete('/shoesInfo/delete_by_id', async (req, res, next) => {
+  try {
+    const deleteShoeInfo = await Shoes.deleteOne({
+      _id: ObjectId(req.body._id)
+    });
     const inStoreShoes = await Shoes.find({});
     res.status(200).json(inStoreShoes);
   } catch (err) {
