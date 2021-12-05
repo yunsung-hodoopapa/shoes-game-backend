@@ -39,6 +39,15 @@ const shoesSchema = new Schema({
   selling_date: {
     type: Date,
   },
+  styleID: {
+    type: String,
+  },
+  retailPrice: {
+    type: String,
+  },
+  resellPrice: {
+    type: String,
+  },
   createAt: {
     type: Date,
     default: Date.now,

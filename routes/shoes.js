@@ -18,6 +18,9 @@ router.post('/regist', async (req, res, next) => {
       buyingDate: req.body.buyingDate,
       thumbnail: req.body.thumbnail,
       brand: req.body.brand,
+      styleID: req.body.styleID,
+      retailPrice: req.body.retailPrice,
+      resellPrice: req.body.resellPrice,
     });
     const inStoreShoes = await Shoes.find({});
     res.status(200).json(inStoreShoes);
@@ -48,6 +51,9 @@ router.patch('/shoesInfo', async (req, res, next) => {
           buyingDate: req.body.buyingDate,
           thumbnail: req.body.thumbnail,
           brand: req.body.brand,
+          styleID: req.body.styleID,
+          retailPrice: req.body.retailPrice,
+          resellPrice: req.body.resellPrice,
         },
       }
     );
@@ -86,6 +92,7 @@ router.get('/search', (req, res, next) => {
   try {
     const keyword = req.query.keyword;
     sneaks.getProducts(keyword, (limit = DEFAULT_LIMIT), (err, products) => {
+      console.log(products);
       // try {
       if (err) {
         console.log(err);
@@ -112,12 +119,23 @@ router.get('/search', (req, res, next) => {
   // });
 });
 // getProducts(keyword, limit, callback) takes in a keyword and limit and returns a product array
-
+router.get('/search/price:styleID', (req, res, next) => {
+  try {
+    const styleID = req.query.styleID;
+    sneaks.getProductPrices(styleID, (err, products) => {
+      console.log(products.resellPrices.stockX);
+      if (err) {
+        console.log(err);
+      }
+      return res.json(products.resellPrices.stockX)
+    })
+  } catch (err) {
+    console.log(err);
+  }
+});
 // Product object includes styleID where you input it in the getProductPrices function
 // getProductPrices(styleID, callback) takes in a style ID and returns sneaker info including a price map and more images of the product
-// sneaks.getProductPrices(styleId, function(err, product){
-//   console.log(product)
-// })
+
 
 // getMostPopular(limit, callback) takes in a limit and returns an array of the current popular products curated by StockX
 // sneaks.getMostPopular(limit , function(err, products){
