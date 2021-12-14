@@ -37,6 +37,34 @@ router.post('/regist', async (req, res, next) => {
   // });
 });
 
+router.post('/regist/following', async (req, res, next) => {
+  try {
+    const shoes = await Shoes.create({
+      shoeName: req.body.shoeName,
+      shoeSize: req.body.shoeSize,
+      shoePrice: req.body.shoePrice,
+      thumbnail: req.body.thumbnail,
+      brand: req.body.brand,
+      styleID: req.body.styleID,
+      retailPrice: req.body.retailPrice,
+      resellPrice: req.body.resellPrice,
+      lowestResellPrice: req.body.lowestResellPrice
+    });
+    const inStoreShoes = await Shoes.find({});
+    res.status(200).json(inStoreShoes);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+  // console.log(req.body);
+  // const shoes = new Shoes(req.body);
+  // console.log(shoes);
+  // shoes.save((err, inputValue) => {
+  //   if (err) return res.json({ success: false, err });
+  //   return res.status(200).json({ success: true });
+  // });
+});
+
 router.patch('/shoesInfo', async (req, res, next) => {
   try {
     const updateShoeInfo = await Shoes.findOneAndUpdate(

@@ -18,8 +18,8 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', (req, res) => {
   User.findOne({ user: req.body.email }, (err, user) => {
-    console.log(user);
     if (err) {
+      console.log('error occured');
       return res.json({
         loginSuccess: false,
         message: '존재하지 않는 아이디입니다.',
@@ -37,10 +37,12 @@ router.post('/login', (req, res) => {
         user
           .generateToken()
           .then((user) => {
-            res
-              .cookie('x_auth', user.token)
-              .status(200)
-              .json({ loginSuccess: true, userId: user._id });
+            console.log('token generate');
+            const resJson = {
+              loginSuccess : true,
+              'userId': user._id
+            }
+            res.cookie('x_auth', user.token).status(200).json(resJson);
           })
           .catch((err) => {
             res.status(400).send(err);
