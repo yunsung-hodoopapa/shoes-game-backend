@@ -1,5 +1,6 @@
 const express = require('express');
 const { Shoes } = require('../schemas/shoes');
+const { FollowingShoes } = require('../schemas/followingShoes');
 const SneaksAPI = require('sneaks-api');
 const sneaks = new SneaksAPI();
 const mongoose = require('mongoose');
@@ -39,7 +40,7 @@ router.post('/regist', async (req, res, next) => {
 
 router.post('/regist/following', async (req, res, next) => {
   try {
-    const shoes = await Shoes.create({
+    const shoes = await FollowingShoes.create({
       shoeName: req.body.shoeName,
       shoeSize: req.body.shoeSize,
       shoePrice: req.body.shoePrice,
@@ -50,7 +51,7 @@ router.post('/regist/following', async (req, res, next) => {
       resellPrice: req.body.resellPrice,
       lowestResellPrice: req.body.lowestResellPrice
     });
-    const inStoreShoes = await Shoes.find({});
+    const inStoreShoes = await FollowingShoes.find({});
     res.status(200).json(inStoreShoes);
   } catch (err) {
     console.error(err);
@@ -109,6 +110,16 @@ router.delete('/shoesInfo/delete_by_id', async (req, res, next) => {
 router.get('/managed-shoesInfo', async (req, res, next) => {
   try {
     const savedShoesData = await Shoes.find({});
+    res.status(200).json(savedShoesData);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/managed-shoesInfo/following', async (req, res, next) => {
+  try {
+    const savedShoesData = await FollowingShoes.find({});
     res.status(200).json(savedShoesData);
   } catch (err) {
     console.error(err);
