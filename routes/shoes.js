@@ -49,7 +49,7 @@ router.post('/regist/following', async (req, res, next) => {
       styleID: req.body.styleID,
       retailPrice: req.body.retailPrice,
       resellPrice: req.body.resellPrice,
-      lowestResellPrice: req.body.lowestResellPrice
+      lowestResellPrice: req.body.lowestResellPrice,
     });
     const inStoreShoes = await FollowingShoes.find({});
     res.status(200).json(inStoreShoes);
@@ -97,9 +97,22 @@ router.patch('/shoesInfo', async (req, res, next) => {
 router.delete('/shoesInfo/delete_by_id', async (req, res, next) => {
   try {
     const deleteShoeInfo = await Shoes.deleteOne({
-      _id: ObjectId(req.body._id)
+      _id: ObjectId(req.body._id),
     });
     const inStoreShoes = await Shoes.find({});
+    res.status(200).json(inStoreShoes);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.delete('/shoesInfo/following/delete_by_id', async (req, res, next) => {
+  try {
+    const deleteShoeInfo = await FollowingShoes.deleteOne({
+      _id: ObjectId(req.body.data),
+    });
+    const inStoreShoes = await FollowingShoes.find({});
     res.status(200).json(inStoreShoes);
   } catch (err) {
     console.error(err);
@@ -166,15 +179,14 @@ router.get('/search/price:styleID', (req, res, next) => {
       if (err) {
         console.log(err);
       }
-      return res.json(products.resellPrices.stockX)
-    })
+      return res.json(products.resellPrices.stockX);
+    });
   } catch (err) {
     console.log(err);
   }
 });
 // Product object includes styleID where you input it in the getProductPrices function
 // getProductPrices(styleID, callback) takes in a style ID and returns sneaker info including a price map and more images of the product
-
 
 // getMostPopular(limit, callback) takes in a limit and returns an array of the current popular products curated by StockX
 // sneaks.getMostPopular(limit , function(err, products){
