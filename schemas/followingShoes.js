@@ -39,7 +39,7 @@ const followingshoesSchema = new Schema({
     type: String,
   },
   lowestResellPrice: {
-    type: Object,
+    type: String,
   },
   createAt: {
     type: Date,

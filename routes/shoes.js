@@ -49,7 +49,7 @@ router.post('/regist/following', async (req, res, next) => {
       styleID: req.body.styleID,
       retailPrice: req.body.retailPrice,
       resellPrice: req.body.resellPrice,
-      lowestResellPrice: req.body.lowestResellPrice,
+      lowestResellPrice: req.body.lowestResellPrice.stockX,
     });
     const inStoreShoes = await FollowingShoes.find({});
     res.status(200).json(inStoreShoes);
@@ -107,7 +107,8 @@ router.delete('/shoesInfo/delete_by_id', async (req, res, next) => {
   }
 });
 
-router.delete('/shoesInfo/following/delete_by_id', async (req, res, next) => {
+router.delete('/following/delete', async (req, res, next) => {
+  console.log(req.body.data)
   try {
     const deleteShoeInfo = await FollowingShoes.deleteOne({
       _id: ObjectId(req.body.data),
