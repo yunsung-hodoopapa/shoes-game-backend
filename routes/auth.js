@@ -1,14 +1,10 @@
 const express = require('express');
 const { auth } = require('../middleware/auth');
-// const { isLoggedIn, isNotLoggedIn } = require('../middleware/login');
 const { User } = require('../schemas/user');
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-  // 회원가입을 할때 필요한 것
-  // post로 넘어온 데이터를 받아서 DB에 저장한다.
-  // const { id, name, password } = req.body;
   const user = new User(req.body);
   user.save((err, userInfo) => {
     if (err) return res.json({ success: false, err });
@@ -39,9 +35,9 @@ router.post('/login', (req, res) => {
           .then((user) => {
             console.log('token generate');
             const resJson = {
-              loginSuccess : true,
-              'userId': user._id
-            }
+              loginSuccess: true,
+              userId: user._id,
+            };
             res.cookie('x_auth', user.token).status(200).json(resJson);
           })
           .catch((err) => {
@@ -68,14 +64,18 @@ router.get('/users', auth, (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  // User.findOneAndUpdate({ _id: req.user._id }, { token: '' }, (err, user) => {
-  //   if (err) {
-  //     return res.json({ success: false, err });
-  //   }
-  //   return res.status(200).send({
-  //     success: true,
-  //   });
-  // });
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { access_token: '' },
+    (err, user) => {
+      if (err) {
+        return res.json({ success: false, err });
+      }
+      return res.status(200).send({
+        success: true,
+      });
+    }
+  );
 });
 
 const kakao = {
@@ -101,7 +101,7 @@ router.post('/kakao', async (req, res) => {
           .generateToken()
           .then((user) => {
             res
-              .cookie('x_auth', user.token) //쿠키에 JWT토큰을 넣어준다.
+              .cookie('x_auth', user.token)
               .status(200)
               .json({
                 registerSuccess: true,
@@ -125,26 +125,10 @@ router.post('/kakao', async (req, res) => {
           token: user.token,
         });
       });
-      // res.status(200).json({ socialLoginSuccess: true, user})
+      res.status(200).json({ socialLoginSuccess: true, user})
     });
   }
 });
-// // const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?
-// // client_id=${kakao.clientID}&redirect_uri=${kakao.redirectUri}&
-// // response_type=code&scope=profile,account_email`;
-
-// // res.redirect(kakaoAuthURL);
-// newUser.generateToken((err, user) => {
-//   if (err) {
-//     return res.status(400).send(err);
-//   }
-//   res
-//     .cookie('x_auth', user.token)
-//     .status(200)
-//     .json({ loginSuccess: true, userId: user._id, token: user.token });
-// });
-//   res.cookie('x_auth', access_token);
-// });
 
 router.get('/callback', (req, res) => {
   const requestToken = req.query.code; //
@@ -153,69 +137,5 @@ router.get('/callback', (req, res) => {
     url,
   });
 });
-
-// router.get('/kakao/callback', async (req, res) => {
-//   console.log('here', req.body.access_token);
-//   res.cookie('x_auth', req.body.access_token);
-//   if (req.body.access_token) {
-//     // 요청 body에 토큰 키가 존재하는지 체크한다.
-//     // 만일 존재한다면, DB에 해당하는 토큰키를 갖고 있는 유저를 탐색한다.
-//     try {
-//       const exUser = await User.findOne({
-//         id : req.body.email,
-//       });
-//       if (exUser) {
-//         done(null, exUser);
-//       } else {
-//         const newUser = await User.create({
-//           email: req.body.id,
-//           nickname: req.body.nickname,
-//           image: req.body.image,
-//         });
-//         done(null, newUser);
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       done(error);
-//     }
-//   }
-// });
-//   let access_token;
-//   try {
-//     access_token = await axios({
-//       method: 'POST',
-//       url: 'https://kauth.kakao.com/oauth/token',
-//       headers: {
-//         'content-type': 'application/x-www-form-urlencoded',
-//       },
-//       data: qs.stringify({
-//         grant_type: 'authorization_code', //특정 스트링
-//         client_id: kakao.clientID,
-//         client_secret: kakao.clientSecret,
-//         redirectUri: kakao.redirectUri,
-//         code: req.query.code,
-//       }),
-//     });
-//   } catch (err) {
-//     res.json(err.data);
-//   }
-//   // 유저정보 받아오기
-//   let user;
-//   try {
-//     console.log(access_token);
-//     user = await axios({
-//       method: 'get',
-//       url: 'https://kapi.kakao.com/v2/user/me',
-//       headers: {
-//         Authorization: `Bearer ${token.data.access_token}`,
-//       }, //헤더에 내용을 보고 보내주겠다.
-//     });
-//     console.log('1', user);
-//   } catch (error) {
-//     res.json(error.data);
-//   }
-//   console.log(user);
-//   res.send('success');
-// });
 
 module.exports = router;

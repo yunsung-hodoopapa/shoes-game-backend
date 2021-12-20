@@ -29,13 +29,6 @@ router.post('/regist', async (req, res, next) => {
     console.error(err);
     next(err);
   }
-  // console.log(req.body);
-  // const shoes = new Shoes(req.body);
-  // console.log(shoes);
-  // shoes.save((err, inputValue) => {
-  //   if (err) return res.json({ success: false, err });
-  //   return res.status(200).json({ success: true });
-  // });
 });
 
 router.post('/regist/following', async (req, res, next) => {
@@ -57,13 +50,6 @@ router.post('/regist/following', async (req, res, next) => {
     console.error(err);
     next(err);
   }
-  // console.log(req.body);
-  // const shoes = new Shoes(req.body);
-  // console.log(shoes);
-  // shoes.save((err, inputValue) => {
-  //   if (err) return res.json({ success: false, err });
-  //   return res.status(200).json({ success: true });
-  // });
 });
 
 router.patch('/shoesInfo', async (req, res, next) => {
@@ -108,7 +94,7 @@ router.delete('/shoesInfo/delete_by_id', async (req, res, next) => {
 });
 
 router.delete('/following/delete', async (req, res, next) => {
-  console.log(req.body.data)
+  console.log(req.body.data);
   try {
     const deleteShoeInfo = await FollowingShoes.deleteOne({
       _id: ObjectId(req.body.data),
@@ -149,29 +135,17 @@ router.get('/search', (req, res, next) => {
       // try {
       if (err) {
         console.log(err);
-        // throw err;
       }
       return res.json(products);
-      // } catch (err) {
-      // throw err;
-      // }
     });
   } catch (err) {
-    // 일단 작동을 하지 않고 있음.
     console.log('here');
     return res.status(400).json({
       message: err.message,
     });
   }
-  // } catch (err) { // 에러 객체  {message: '', code: '', ...};
-  //   return res.status(400).json({
-  //   });
-  // return res.json({
-  //   status: 400,
-  //   message: err // 문자열 넣기. 받아서 넣거나 내가 정한 문자열 넣어주거나 -> 상수 처리
-  // });
 });
-// getProducts(keyword, limit, callback) takes in a keyword and limit and returns a product array
+
 router.get('/search/price:styleID', (req, res, next) => {
   try {
     const styleID = req.query.styleID;
@@ -186,13 +160,5 @@ router.get('/search/price:styleID', (req, res, next) => {
     console.log(err);
   }
 });
-// Product object includes styleID where you input it in the getProductPrices function
-// getProductPrices(styleID, callback) takes in a style ID and returns sneaker info including a price map and more images of the product
 
-// getMostPopular(limit, callback) takes in a limit and returns an array of the current popular products curated by StockX
-// sneaks.getMostPopular(limit , function(err, products){
-//   console.log(products)
-// })
-
-// app.use('/shoes' shoesRouter);
 module.exports = router;
