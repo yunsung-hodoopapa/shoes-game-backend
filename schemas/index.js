@@ -5,7 +5,7 @@ const connect = () => {
     mongoose.set('debug', true);
   }
 
-  mongoose.connect('mongodb://hodoopapa:1234@localhost:27017/admin', {
+  mongoose.connect('mongodb://127.0.0.1:27017/admin', {
       dbName: 'nodejs',
       useNewUrlParser: true,
       useUnifiedTopology: true
