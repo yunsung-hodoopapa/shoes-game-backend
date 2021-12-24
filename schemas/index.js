@@ -5,11 +5,14 @@ const connect = () => {
     mongoose.set('debug', true);
   }
 
-  mongoose.connect('mongodb://hodoopapa:1234@3.16.107.4/admin', {
+  mongoose.connect(
+    'mongodb://hodoopapa:1234@3.16.107.44/admin',
+    {
       dbName: 'nodejs',
       useNewUrlParser: true,
-      useUnifiedTopology: true
-    }, (error) => {
+      useUnifiedTopology: true,
+    },
+    (error) => {
       if (error) {
         console.log('몽고디비 연결 에러', error);
       } else {
