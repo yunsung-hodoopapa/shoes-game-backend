@@ -19,7 +19,10 @@ connect();
 // app.use(express.static(path.join(__dirname, 'public')));
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: [
+    'https://shoesgame.app',
+    'http://3.16.107.44:3002',
+  ],
   credentials: true,
 };
 

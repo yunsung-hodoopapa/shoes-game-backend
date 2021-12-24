@@ -38,7 +38,10 @@ router.post('/login', (req, res) => {
               loginSuccess: true,
               userId: user._id,
             };
-            res.cookie('x_auth', user.token).status(200).json(resJson);
+            res.cookie('x_auth', user.token, {
+              httpOnly: false
+            });
+            res.status(200).json(resJson);
           })
           .catch((err) => {
             res.status(400).send(err);
@@ -97,7 +100,10 @@ router.post('/kakao', async (req, res) => {
           user
             .generateToken()
             .then((user) => {
-              res.cookie('x_auth', user.token).status(200).json({
+              res.cookie('x_auth', user.token, {
+                httpOnly: false
+              });
+              res.status(200).json({
                 registerSuccess: true,
                 socialLoginSuccess: true,
                 userId: user._id,
