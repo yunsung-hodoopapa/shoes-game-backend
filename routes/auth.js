@@ -86,46 +86,42 @@ const kakao = {
 
 router.post('/kakao', async (req, res) => {
   if (req.body.access_token) {
-    User.findOne({ access_token: req.body.access_token }, (err, user) => {
+    User.findOne({ access_token: req.body.access_token }, async (err, user) => {
       if (!user) {
-        console.log(req.body);
         const user = new User(req.body);
-        user.save((err, doc) => {
+        user.save((err) => {
           //json 형식으로 보내준다.
           if (err) {
-            return res.json({ success: false, err });
+            res.json({ success: false, err });
           }
-          return res.status(200).json({ success: true, err });
-        });
-        user
-          .generateToken()
-          .then((user) => {
-            res
-              .cookie('x_auth', user.token)
-              .status(200)
-              .json({
+          user
+            .generateToken()
+            .then((user) => {
+              res.cookie('x_auth', user.token).status(200).json({
                 registerSuccess: true,
                 socialLoginSuccess: true,
                 userId: user._id,
                 token: user.token,
               });
-          })
-          .catch((err) => {
-            res.json({ socialLoginSuccess: false, err });
-          });
+            })
+            .catch((err) => {
+              res.json({ socialLoginSuccess: false, err });
+            });
+        });
+        return;
       }
       user.token = req.body.access_token;
       user.save((error, user) => {
         if (error) {
-          return res.status(400).json({ error: 'something wrong' });
+          res.status(400).json({ error: 'something wrong' });
         }
-        return res.cookie('x_auth', user.token).status(200).json({
+        res.cookie('x_auth', user.token).status(200).json({
           socialLoginSuccess: true,
           userId: user._id,
           token: user.token,
         });
       });
-      res.status(200).json({ socialLoginSuccess: true, user})
+      res.status(200).json({ socialLoginSuccess: true, user });
     });
   }
 });
