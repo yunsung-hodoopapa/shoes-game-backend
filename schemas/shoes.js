@@ -54,6 +54,6 @@ const shoesSchema = new Schema({
   },
 });
 
-const Shoes = mongoose.model('Shoes', shoesSchema);
+const Shoes = mongoose.model('Shoe', shoesSchema);
 
 module.exports = { Shoes };

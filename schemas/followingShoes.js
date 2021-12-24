@@ -47,6 +47,6 @@ const followingshoesSchema = new Schema({
   },
 });
 
-const FollowingShoes = mongoose.model('FollowingShoes', followingshoesSchema);
+const FollowingShoes = mongoose.model('FollowingShoe', followingshoesSchema);
 
 module.exports = { FollowingShoes };
