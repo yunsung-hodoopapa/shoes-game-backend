@@ -22,6 +22,7 @@ const corsOptions = {
   origin: [
     'https://shoesgame.app',
     'http://3.16.107.44:3002',
+    'https://shoesgame.app/login',
   ],
   credentials: true,
 };
