@@ -19,7 +19,7 @@ connect();
 // app.use(express.static(path.join(__dirname, 'public')));
 
 const corsOptions = {
-  origin: true,
+  origin: 'http://localhost:3000',
   credentials: true,
 };
 
@@ -29,6 +29,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // app.get('/', (req, res) => res.send('hello world!!'));
+
 
 app.use('/auth', authRouter);
 app.use('/shoes', shoesRouter);
