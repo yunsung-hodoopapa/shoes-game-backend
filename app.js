@@ -25,6 +25,7 @@ const corsOptions = {
     'https://3.16.107.44:3002/auth/kakao',
     'http://shoesgame.click',
     'https://shoesgame.click',
+    'https://shoesgame.click:3002/auth/kakao',
     'https://shoesgame.app/login',
   ],
   credentials: true,
