@@ -18,12 +18,12 @@ connect();
 
 // app.use(express.static(path.join(__dirname, 'public')));
 
-const corsOptions = {
-  origin: true,
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: true,
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());

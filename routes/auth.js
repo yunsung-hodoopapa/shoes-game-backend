@@ -88,6 +88,7 @@ const kakao = {
 };
 
 router.post('/kakao', async (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://shoesgame.app');
   if (req.body.access_token) {
     User.findOne({ access_token: req.body.access_token }, async (err, user) => {
       console.log('function operation');
@@ -113,7 +114,6 @@ router.post('/kakao', async (req, res) => {
               });
             })
             .catch((err) => {
-              res.header('Access-Control-Allow-Origin', '*');
               res.json({ socialLoginSuccess: false, err });
             });
         });
