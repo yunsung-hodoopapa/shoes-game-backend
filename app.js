@@ -35,7 +35,6 @@ const corsOptionsDelegate = function (req, callback) {
 
 app.options('*', cors())
 
-app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
