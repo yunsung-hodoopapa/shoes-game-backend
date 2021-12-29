@@ -90,6 +90,7 @@ const kakao = {
 router.post('/kakao', async (req, res) => {
   if (req.body.access_token) {
     User.findOne({ access_token: req.body.access_token }, async (err, user) => {
+      console.log('function operation');
       if (!user) {
         const user = new User(req.body);
         user.save((err) => {
@@ -97,13 +98,14 @@ router.post('/kakao', async (req, res) => {
           if (err) {
             res.json({ success: false, err });
           }
+          console.log('here2');
           user
             .generateToken()
             .then((user) => {
               res.cookie('x_auth', user.token, {
                 httpOnly: false
               });
-              res.status(200).json({
+              return res.status(200).json({
                 registerSuccess: true,
                 socialLoginSuccess: true,
                 userId: user._id,
@@ -118,16 +120,18 @@ router.post('/kakao', async (req, res) => {
       }
       user.token = req.body.access_token;
       user.save((error, user) => {
+        console.log('here3');
         if (error) {
-          res.status(400).json({ error: 'something wrong' });
+          return res.status(400).json({ error: 'something wrong' });
         }
-        res.cookie('x_auth', user.token).status(200).json({
+        return res.cookie('x_auth', user.token).status(200).json({
           socialLoginSuccess: true,
           userId: user._id,
           token: user.token,
         });
       });
-      res.status(200).json({ socialLoginSuccess: true, user });
+      // console.log('complete');
+      // res.status(200).json({ socialLoginSuccess: true, user });
     });
   }
 });

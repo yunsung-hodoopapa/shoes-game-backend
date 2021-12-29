@@ -18,20 +18,18 @@ connect();
 
 // app.use(express.static(path.join(__dirname, 'public')));
 
-// const corsOptions = {
-//   origin: [
-//     'https://shoesgame.app',
-//   ],
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: [
+    'https://shoesgame.app',
+    'http://localhost:3000'
+  ],
+  credentials: true,
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-
-// app.get('/', (req, res) => res.send('hello world!!'));
-
 
 app.use('/auth', authRouter);
 app.use('/shoes', shoesRouter);
