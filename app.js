@@ -11,7 +11,6 @@ const authRouter = require('./routes/auth');
 const shoesRouter = require('./routes/shoes');
 
 const app = express();
-const server = app.listen(80);
 
 app.set('port', process.env.PORT || 3002);
 
@@ -35,5 +34,3 @@ app.use('/shoes', shoesRouter);
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
 });
-
-server.keepAliveTimeout = 65000;
