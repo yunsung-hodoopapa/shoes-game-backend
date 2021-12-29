@@ -11,6 +11,7 @@ const authRouter = require('./routes/auth');
 const shoesRouter = require('./routes/shoes');
 
 const app = express();
+const server = app.listen(80);
 
 app.set('port', process.env.PORT || 3002);
 
@@ -18,12 +19,12 @@ connect();
 
 // app.use(express.static(path.join(__dirname, 'public')));
 
-// const corsOptions = {
-//   origin: true,
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: true,
+  credentials: true,
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
@@ -34,3 +35,5 @@ app.use('/shoes', shoesRouter);
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
 });
+
+server.keepAliveTimeout = 65000;

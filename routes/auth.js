@@ -102,7 +102,6 @@ router.post('/kakao', async (req, res) => {
           user
             .generateToken()
             .then((user) => {
-              res.header('Access-Control-Allow-Origin', 'https://shoesgame.app');
               res.cookie('x_auth', user.token, {
                 httpOnly: false
               });
@@ -125,7 +124,6 @@ router.post('/kakao', async (req, res) => {
         if (error) {
           return res.status(400).json({ error: 'something wrong' });
         }
-        res.header('Access-Control-Allow-Origin', 'https://shoesgame.app');
         return res.cookie('x_auth', user.token).status(200).json({
           socialLoginSuccess: true,
           userId: user._id,
