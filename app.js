@@ -23,14 +23,14 @@ const corsOptions = {
   credentials: true,
 };
 
-app.get('/', (req, res) => {
-  res.send('hello');
-});
-
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.get('/', (req, res) => {
+  res.status(200).send('hello');
+});
 
 app.use('/auth', authRouter);
 app.use('/shoes', shoesRouter);
