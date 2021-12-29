@@ -22,7 +22,7 @@ connect();
 //   origin: 'https://shoesgame.app',
 //   credentials: true,
 // };
-const whitelist  = ['http://localhost:3000', 'https://shoesgame.app']
+const whitelist  = ['http://localhost:3000', 'https://shoesgame.app', 'https://shoesgame.app/login']
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
   if (whitelist.indexOf(req.header('Origin')) !== -1) {
