@@ -18,7 +18,8 @@ connect();
 
 // app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors({
+app.use(
+  cors({
     origin: ['https://shoesgame.app'],
     credentials: true,
     optionsSuccessStatus: 200,
@@ -35,6 +36,9 @@ app.get('/', (req, res) => {
 app.use('/auth', authRouter);
 app.use('/shoes', shoesRouter);
 
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
 });
+
+server.keepAliveTimeout = 65000; // Ensure all inactive connections are terminated by the ALB, by setting this a few seconds higher than the ALB idle timeout
+server.headersTimeout = 66000;
