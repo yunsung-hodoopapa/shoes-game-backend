@@ -18,12 +18,12 @@ connect();
 
 // app.use(express.static(path.join(__dirname, 'public')));
 
-const corsOptions = {
-  origin: 'https://shoesgame.app',
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+    origin: ['https://shoesgame.app'],
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
