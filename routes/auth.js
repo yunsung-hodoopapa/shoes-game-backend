@@ -39,7 +39,9 @@ router.post('/login', (req, res) => {
               userId: user._id,
             };
             res.cookie('x_auth', user.token, {
-              httpOnly: false
+              httpOnly: false,
+              sameSite: 'None',
+              secure: true,
             });
             res.status(200).json(resJson);
           })
@@ -103,7 +105,9 @@ router.post('/kakao', async (req, res) => {
             .generateToken()
             .then((user) => {
               res.cookie('x_auth', user.token, {
-                httpOnly: false
+                httpOnly: false,
+                sameSite: 'None',
+                secure: true,
               });
               return res.status(200).json({
                 registerSuccess: true,
@@ -124,11 +128,18 @@ router.post('/kakao', async (req, res) => {
         if (error) {
           return res.status(400).json({ error: 'something wrong' });
         }
-        return res.cookie('x_auth', user.token).status(200).json({
-          socialLoginSuccess: true,
-          userId: user._id,
-          token: user.token,
-        });
+        return res
+          .cookie('x_auth', user.token, {
+            httpOnly: false,
+            sameSite: 'None',
+            secure: true,
+          })
+          .status(200)
+          .json({
+            socialLoginSuccess: true,
+            userId: user._id,
+            token: user.token,
+          });
       });
       // console.log('complete');
       // res.status(200).json({ socialLoginSuccess: true, user });
