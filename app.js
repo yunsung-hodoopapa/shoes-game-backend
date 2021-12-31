@@ -12,7 +12,7 @@ const shoesRouter = require('./routes/shoes');
 
 const app = express();
 
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 3002);
 
 connect();
 
