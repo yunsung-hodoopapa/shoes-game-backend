@@ -12,7 +12,7 @@ const shoesRouter = require('./routes/shoes');
 
 const app = express();
 
-app.set('port', process.env.PORT || 3002);
+app.set('port', process.env.PORT || 80);
 
 connect();
 
@@ -20,7 +20,7 @@ connect();
 
 app.use(
   cors({
-    origin: ['https://shoesgame.app'],
+    origin: ['https://shoesgame.app', 'http://localhost:3000'],
     credentials: true,
     optionsSuccessStatus: 200,
   })
