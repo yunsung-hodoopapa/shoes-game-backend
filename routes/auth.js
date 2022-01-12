@@ -36,6 +36,7 @@ router.post('/login', (req, res) => {
             console.log('token generate');
             const resJson = {
               loginSuccess: true,
+              user: user,
               userId: user._id,
             };
             res.cookie('x_auth', user.token, {
@@ -69,15 +70,17 @@ router.get('/users', auth, (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
+  console.log(req.body);
   User.findOneAndUpdate(
-    { _id: req.user._id },
-    { access_token: '' },
+    { _id: req.body._id },
+    { token: '' },
     (err, user) => {
       if (err) {
         return res.json({ success: false, err });
       }
       return res.status(200).send({
         success: true,
+        user: {},
       });
     }
   );
@@ -100,10 +103,11 @@ router.post('/kakao', async (req, res) => {
           if (err) {
             res.json({ success: false, err });
           }
-          console.log('here2');
           user
             .generateToken()
             .then((user) => {
+              console.log(user);
+              console.log(typeof user);
               res.cookie('x_auth', user.token, {
                 httpOnly: false,
                 sameSite: 'None',
@@ -112,6 +116,7 @@ router.post('/kakao', async (req, res) => {
               return res.status(200).json({
                 registerSuccess: true,
                 socialLoginSuccess: true,
+                user: user,
                 userId: user._id,
                 token: user.token,
               });
@@ -124,6 +129,8 @@ router.post('/kakao', async (req, res) => {
       }
       user.token = req.body.access_token;
       user.save((error, user) => {
+        console.log(user);
+        console.log(typeof user);
         console.log('here3');
         if (error) {
           return res.status(400).json({ error: 'something wrong' });
@@ -137,6 +144,7 @@ router.post('/kakao', async (req, res) => {
           .status(200)
           .json({
             socialLoginSuccess: true,
+            user: user,
             userId: user._id,
             token: user.token,
           });
