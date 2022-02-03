@@ -83,7 +83,7 @@ router.patch('/shoesInfo', async (req, res, next) => {
 router.delete('/shoesInfo/delete_by_id', async (req, res, next) => {
   try {
     const deleteShoeInfo = await Shoes.deleteOne({
-      _id: ObjectId(req.body._id),
+      _id: ObjectId(req.body.data),
     });
     const inStoreShoes = await Shoes.find({});
     res.status(200).json(inStoreShoes);
@@ -94,7 +94,6 @@ router.delete('/shoesInfo/delete_by_id', async (req, res, next) => {
 });
 
 router.delete('/following/delete', async (req, res, next) => {
-  console.log(req.body.data);
   try {
     const deleteShoeInfo = await FollowingShoes.deleteOne({
       _id: ObjectId(req.body.data),
