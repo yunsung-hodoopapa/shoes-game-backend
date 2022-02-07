@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const express = require('express');
 const { auth } = require('../middleware/auth');
 const { User } = require('../schemas/user');
@@ -71,19 +72,15 @@ router.get('/users', auth, (req, res) => {
 
 router.post('/logout', (req, res) => {
   console.log(req.body);
-  User.findOneAndUpdate(
-    { _id: req.body._id },
-    { token: '' },
-    (err, user) => {
-      if (err) {
-        return res.json({ success: false, err });
-      }
-      return res.status(200).send({
-        success: true,
-        user: {},
-      });
+  User.findOneAndUpdate({ _id: req.body._id }, { token: '' }, (err, user) => {
+    if (err) {
+      return res.json({ success: false, err });
     }
-  );
+    return res.status(200).send({
+      success: true,
+      user: {},
+    });
+  });
 });
 
 const kakao = {
@@ -152,6 +149,29 @@ router.post('/kakao', async (req, res) => {
       // console.log('complete');
       // res.status(200).json({ socialLoginSuccess: true, user });
     });
+  }
+});
+
+router.get('/managed/userInfo', async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split('Bearer ')[1];
+    User.findOne({ token: token }, (err, user) => {
+      if (err) {
+        console.log('token is not match any data');
+        return json({
+          isAuth: false,
+          message: '유저 정보를 불러오는데 실패했습니다.',
+        });
+      }
+      const resJson = {
+        isAuth: true,
+        user: user,
+      };
+      res.status(200).json(resJson);
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
